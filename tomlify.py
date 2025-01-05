@@ -4,6 +4,7 @@ import shutil
 import logging
 from pathlib import Path
 import sys
+import argparse
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -46,11 +47,11 @@ def verify_file_health(path: Path) -> bool:
         return False
 
 
-def copy_pyproject_toml(custom_template: Path | None = None) -> None:
+def copy_pyproject_toml(custom_template: Path | None = None, output_dir: Path | None = None) -> None:
     """Copy pyproject.toml template to current directory with error handling"""
     try:
         template_path = custom_template or DEFAULT_TEMPLATE_PATH
-        dest_path = Path.cwd() / "pyproject.toml"
+        dest_path = (output_dir or Path.cwd()) / "pyproject.toml"
 
         if not template_path.exists():
             raise TomlifyError(f"Template not found at {template_path}")
@@ -75,7 +76,7 @@ def copy_pyproject_toml(custom_template: Path | None = None) -> None:
         if not verify_file_health(dest_path):
             raise TomlifyError("Failed to create a valid destination file")
 
-        logger.info("pyproject.toml copied successfully")
+        logger.info(f"pyproject.toml copied successfully to {dest_path}")
 
     except (TomlifyError, FileNotFoundError, PermissionError, OSError) as e:
         logger.error(str(e) if isinstance(e, TomlifyError) else f"{type(e).__name__}: {e}")
@@ -83,8 +84,13 @@ def copy_pyproject_toml(custom_template: Path | None = None) -> None:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Copy pyproject.toml template to a directory")
+    parser.add_argument("-t", "--template", type=Path, help="Path to custom template file")
+    parser.add_argument("-o", "--output", type=Path, help="Directory to output pyproject.toml")
+    args = parser.parse_args()
+
     try:
-        copy_pyproject_toml()
+        copy_pyproject_toml(args.template, args.output)
     except (TomlifyError, KeyboardInterrupt) as e:
         if isinstance(e, KeyboardInterrupt):
             logger.error("Operation cancelled by user")

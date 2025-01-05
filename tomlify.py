@@ -9,20 +9,17 @@ import sys
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-DEFAULT_TEMPLATE_PATH = Path("/Users/cooper/Dev/vscode/tomlify/template/pyproject.toml")
+# Get the directory of the script
+SCRIPT_DIR = Path(__file__).parent
 
-# Create a separate handler for the terminal output
+# Find the template folder in the project directory
+DEFAULT_TEMPLATE_PATH = SCRIPT_DIR / "template" / "pyproject.toml"
+
+# Configure terminal output
 terminal_handler = logging.StreamHandler()
 terminal_handler.setFormatter(logging.Formatter("%(message)s"))
 terminal_handler.setLevel(logging.INFO)
-
-# Create a separate handler for the log file
-file_handler = logging.FileHandler(Path.home() / ".logs" / "tomlify.log")
-file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
-
-# Add handlers to the logger
 logger.addHandler(terminal_handler)
-logger.addHandler(file_handler)
 
 
 class TomlifyError(Exception):
@@ -52,12 +49,8 @@ def verify_file_health(path: Path) -> bool:
 def copy_pyproject_toml(custom_template: Path | None = None) -> None:
     """Copy pyproject.toml template to current directory with error handling"""
     try:
-        # Set default template path
-        default_template_path = DEFAULT_TEMPLATE_PATH
-        template_path = custom_template or default_template_path
+        template_path = custom_template or DEFAULT_TEMPLATE_PATH
         dest_path = Path.cwd() / "pyproject.toml"
-        log_dir = Path.home() / ".logs"
-        log_dir.mkdir(parents=True, exist_ok=True)
 
         if not template_path.exists():
             raise TomlifyError(f"Template not found at {template_path}")
@@ -68,21 +61,17 @@ def copy_pyproject_toml(custom_template: Path | None = None) -> None:
         if not verify_permissions(template_path) or not verify_permissions(dest_path):
             raise TomlifyError("Insufficient permissions")
 
-        # Handle existing destination file
         if dest_path.exists():
             response = input("pyproject.toml already exists. Overwrite? (y/n): ").lower()
             if response != "y":
                 return
 
-            # Create backup of existing destination file
             backup_path = dest_path.with_suffix(".toml.backup")
             shutil.copy2(dest_path, backup_path)
             logger.info(f"Created backup at {backup_path}")
 
-        # Copy template to destination
         shutil.copy2(template_path, dest_path)
 
-        # Verify destination file health
         if not verify_file_health(dest_path):
             raise TomlifyError("Failed to create a valid destination file")
 

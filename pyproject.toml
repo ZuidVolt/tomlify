@@ -1,0 +1,74 @@
+[project]
+name = "tomlify"
+version = "0.1.0"
+description = "A tool for copying pyproject.toml templates"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Apache License" }
+
+[project.optional-dependencies]
+dev = ["mypy", "pyright", "ruff"]
+
+[tool.ruff]
+line-length = 120
+fix = true
+unsafe-fixes = true
+preview = true
+
+[tool.ruff.lint]
+preview = true
+select = [
+    "F",
+    "W",
+    "N",
+    "C90",
+    "B",
+    "UP",
+    "RET",
+    "SIM",
+    "RUF",
+    "NPY",
+    "PD",
+    "ARG",
+    "TID",
+    "PTH",
+    "Q",
+    "ISC",
+    "PIE",
+    "YTT",
+    "ASYNC",
+    "C4",
+    "T10",
+    "A",
+    "COM",
+    "RSE",
+    "PL",
+    "E",
+    "PGH",
+]
+ignore = [
+    "PLR0913",
+    "PLR0911",
+    "PLR0914",
+    "PLR6301",
+    "PD901",
+    "E501",
+    "G004",
+    "RUF100",
+    "PGH003",
+    "PLR0911",
+    "PLR0912",
+    "COM812",
+    "ISC001",
+]
+
+[tool.mypy]
+strict = true
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.13"
+reportUnusedCallResult = false
+reportAny = false
+reportExplicitAny = false

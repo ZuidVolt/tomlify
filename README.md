@@ -5,8 +5,10 @@ A simple CLI tool to quickly set up Python projects with a pre-configured `pypro
 ## 🌟 Features
 
 - Quick setup of `pyproject.toml` with best practices
-- Built-in backup of existing configuration
-- Comprehensive error handling and logging
+- Custom template support via command-line options
+- Custom output directory support
+- Automatic backup of existing configuration files
+- Comprehensive error handling and permissions verification
 - Pre-configured settings for popular tools:
   - Ruff (linting)
   - MyPy (type checking)
@@ -19,17 +21,29 @@ A simple CLI tool to quickly set up Python projects with a pre-configured `pypro
 Clone the repository and make the script executable:
 
 ```bash
-git clone https://github.com/yourusername/tomlify.git
+git clone https://github.com/zuidvolt/tomlify.git
 cd tomlify
 chmod +x tomlify.py
 ```
 
 ## 🚀 Usage
 
-Navigate to your Python project directory and run:
+Basic usage - creates pyproject.toml in current directory:
 
 ```bash
 /path/to/tomlify.py
+```
+
+Using a custom template:
+
+```bash
+/path/to/tomlify.py -t /path/to/custom/template.toml
+```
+
+Specifying an output directory:
+
+```bash
+/path/to/tomlify.py -o /path/to/project/directory
 ```
 
 You can also create an alias for the script in your `.bashrc` or `.zshrc` file:
@@ -38,13 +52,17 @@ You can also create an alias for the script in your `.bashrc` or `.zshrc` file:
 alias tomlify='/path/to/tomlify.py'
 ```
 
-This will allow you to run the script from anywhere by simply typing `tomlify` in your terminal.
+Command Line Options:
+
+- `-t, --template`: Specify a custom template file path
+- `-o, --output`: Specify the output directory for pyproject.toml
 
 The script will:
 
-1. Create a new `pyproject.toml` if none exists
-2. Prompt for confirmation before overwriting an existing file
-3. Automatically create a backup of any existing configuration
+1. Verify permissions and file health
+2. Create a new `pyproject.toml` if none exists
+3. Prompt for confirmation before overwriting an existing file
+4. Automatically create a backup of any existing configuration
 
 ## 📝 License
 

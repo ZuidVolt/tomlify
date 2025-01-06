@@ -71,7 +71,3 @@ This project is licensed under the Apache License, Version 2.0 with important ad
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📊 Logging
-
-The tool maintains logs at `~/.logs/tomlify.log` for troubleshooting.

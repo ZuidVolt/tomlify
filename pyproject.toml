@@ -66,8 +66,6 @@ ignore = [
 strict = true
 
 [tool.pyright]
-venvPath = "."
-venv = ".venv"
 pythonVersion = "3.13"
 reportUnusedCallResult = false
 reportAny = false
